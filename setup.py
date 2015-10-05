@@ -1,6 +1,14 @@
+import sys
 from io import open
 
 from setuptools import find_packages, setup
+
+install_requires = [
+    'Django>=1.7',
+    'sqlparse',
+]
+if sys.version_info < (3, 3):
+    install_requires += ['ipaddress']
 
 setup(
     name='django-debug-toolbar',
@@ -14,10 +22,7 @@ setup(
     download_url='https://pypi.python.org/pypi/django-debug-toolbar',
     license='BSD',
     packages=find_packages(exclude=('tests.*', 'tests', 'example')),
-    install_requires=[
-        'Django>=1.7',
-        'sqlparse',
-    ],
+    install_requires=install_requires,
     include_package_data=True,
     zip_safe=False,                 # because we're including static files
     classifiers=[

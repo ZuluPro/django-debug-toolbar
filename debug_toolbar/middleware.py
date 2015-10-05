@@ -6,7 +6,7 @@ from __future__ import absolute_import, unicode_literals
 
 import re
 import threading
-import fnmatch
+import ipaddress
 
 from django.conf import settings
 from django.utils import six
@@ -26,9 +26,15 @@ def show_toolbar(request):
     Default function to determine whether to show the toolbar on a given page.
     """
     show = bool(settings.DEBUG)
-    if request.META.get('REMOTE_ADDR', None) and show:
+    remote_addr = request.META.get('REMOTE_ADDR', None)
+    if remote_addr and show:
         for ip in settings.INTERNAL_IPS:
-            if fnmatch.fnmatch(request.META['REMOTE_ADDR'], ip):
+            if '/' in ip:
+                network = ipaddress.ip_network(ip)
+                if ipaddress.ip_address(remote_addr) in network.hosts():
+                    show = True
+                    break
+            elif remote_addr == ip:
                 show = True
                 break
         else:

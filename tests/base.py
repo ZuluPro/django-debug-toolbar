@@ -14,7 +14,7 @@ rf = RequestFactory()
 class BaseTestCase(TestCase):
 
     def setUp(self):
-        request = rf.get('/')
+        request = rf.get('/', REMOTE_ADDR='127.0.0.1')
         response = HttpResponse()
         toolbar = DebugToolbar(request)
 

@@ -40,12 +40,14 @@ class DebugToolbarTestCase(BaseTestCase):
         with self.settings(INTERNAL_IPS=[]):
             self.assertFalse(show_toolbar(self.request))
 
-    def test_show_toolbar_INTERNAL_IPS_wildcard(self):
-        with self.settings(INTERNAL_IPS=['127.0.0.*']):
+    def test_show_toolbar_INTERNAL_IPS_ip_address(self):
+        with self.settings(INTERNAL_IPS=['127.0.0.1']):
             self.assertTrue(show_toolbar(self.request))
-        with self.settings(INTERNAL_IPS=['*']):
+
+    def test_show_toolbar_INTERNAL_IPS_ip_network(self):
+        with self.settings(INTERNAL_IPS=['127.0.0.0/8']):
             self.assertTrue(show_toolbar(self.request))
-        with self.settings(INTERNAL_IPS=['127.0.0.']):
+        with self.settings(INTERNAL_IPS=['128.0.1.0/24']):
             self.assertFalse(show_toolbar(self.request))
 
     def _resolve_stats(self, path):
